@@ -17,6 +17,7 @@
 !README.md
 !LICENSE
 !config.example.json
+!discordCaddyLogger
 
 # !Makefile
 

@@ -1,0 +1,1 @@
+docker run -d -v /var/log/caddy:/var/log/caddy/ caddy

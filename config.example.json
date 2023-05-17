@@ -1,0 +1,5 @@
+{
+    "containerName": "name",
+    "webhookUrl": "https://discord.com/api/webhooks/",
+    "logDir": "/var/log/caddy/access.log"
+}

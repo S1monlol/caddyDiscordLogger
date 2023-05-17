@@ -231,28 +231,29 @@ func handleRequest(jsonString string, webhookUrl string) {
 	err := json.Unmarshal([]byte(lastLine), &data)
 	if err != nil {
 		log.Println("JSON parse error:", err)
+	} else {
+
+		var date string = time.Unix(int64(data.Ts), 0).Format("2006-01-02 15:04:05")
+
+		var importantInfo []string = []string{
+			// strconv.FormatFloat(data.Ts, 'f', 4, 64),
+			date,
+			data.Request.Method,
+			data.Request.Host + data.Request.URI,
+			data.Request.Headers.CfConnectingIP[0],
+			data.Request.Headers.UserAgent[0],
+			fmt.Sprint(data.Status),
+		}
+
+		fmt.Println(importantInfo)
+
+		// send message to discord webhook
+		// [2023-05-17 13:03:52 GET imdb.simo.ng 50.230.198.1 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 200]
+
+		var messageContent string = "```" + importantInfo[0] + "\n---------------------------------------- \n" + importantInfo[2] + "\n" + importantInfo[3] + "\n" + importantInfo[4] + "\n" + importantInfo[5] + "```"
+
+		sendMessageToDiscord(messageContent, webhookUrl)
 	}
-
-	var date string = time.Unix(int64(data.Ts), 0).Format("2006-01-02 15:04:05")
-
-	var importantInfo []string = []string{
-		// strconv.FormatFloat(data.Ts, 'f', 4, 64),
-		date,
-		data.Request.Method,
-		data.Request.Host,
-		data.Request.Headers.CfConnectingIP[0],
-		data.Request.Headers.UserAgent[0],
-		fmt.Sprint(data.Status),
-	}
-
-	fmt.Println(importantInfo)
-
-	// send message to discord webhook
-	// [2023-05-17 13:03:52 GET imdb.simo.ng 50.230.198.1 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 200]
-
-	var messageContent string = "```" + importantInfo[0] + "\n---------------------------------------- \n" + importantInfo[2] + "\n" + importantInfo[3] + "\n" + importantInfo[4] + "\n" + importantInfo[5] + "```"
-
-	sendMessageToDiscord(messageContent, webhookUrl)
 }
 
 func main() {
